@@ -1,0 +1,8 @@
+test:
+  override:
+    - echo 'skipping tests'
+deployment:
+  production:
+    branch: master
+    commands:
+      - git push -q -f git@heroku.com:moneypenny.git $CIRCLE_SHA1:master
