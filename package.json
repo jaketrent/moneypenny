@@ -11,6 +11,10 @@
     "bot"
   ],
 
+  "scripts": {
+    "start": "bin/hubot -a campfire -n Moneypenny"
+  },
+
   "description": "A simple helpful robot for your Company",
 
   "licenses": [{
