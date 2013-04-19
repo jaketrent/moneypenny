@@ -1,1 +1,1 @@
-web: bin/hubot -a campfire -n Moneypenny
+web: bin/hubot --adapter campfire --name Moneypenny --alias mp
