@@ -1,4 +1,6 @@
-# Hubot
+![Moneypenny](https://dl.dropboxusercontent.com/u/1693924/pics/687474703a2f2f692e696d6775722e636f6d2f337a414b392e6a7067.jpeg)
+
+# Moneypenny (Hubot)
 
 This is a version of GitHub's Campfire bot, hubot. He's pretty cool.
 
@@ -171,13 +173,13 @@ module.exports = (robot) ->
   robot.respond /have a beer/i, (msg) ->
     # Get number of beers had (coerced to a number).
     beersHad = robot.brain.get('totalBeers') * 1 or 0
-    
+
     if beersHad > 4
       msg.respond "I'm too drunk.."
-    
+
     else
       msg.respond 'Sure!'
-      
+
       robot.brain.set 'totalBeers', beersHad+1
       # Or robot.brain.set totalBeers: beersHad+1
 ```
