@@ -7,7 +7,7 @@
 #   "githubot": "0.2.0"
 #
 # Configuration:
-#   HUBOT_GITHUB_TOKEN (github api v3 client id???)
+#   HUBOT_GITHUB_TOKEN (github api v3 client secret???)
 #   HUBOT_GITHUB_USER (optional)
 #   HUBOT_GITHUB_REPO (eg, octanner/nicknack???)
 #   HUBOT_GITHUB_USER_(.*) (optional)
@@ -87,7 +87,9 @@ module.exports = (robot) ->
     query_params.assignee = criteria.assignee if criteria.assignee?
 
     base_url = process.env.HUBOT_GITHUB_API || 'https://api.github.com'
-    github.get "#{base_url}/repos/#{criteria.repo}/issues", query_params, (issues) ->
+    githubUrl = "#{base_url}/repos/#{criteria.repo}/issues"
+    console.log "GITHUBURL: #{githubUrl}"
+    github.get githubUrl, query_params, (issues) ->
       issues = filter_issues issues, criteria
 
       if _.isEmpty issues
