@@ -19,8 +19,8 @@
 #   hubot show [me] issues for <user/repo> -- List all issues for given repo
 #   hubot show [me] issues -- Lists all issues IFF HUBOT_GITHUB_REPO configured
 #   hubot show <chat user's> issues -- Lists all issues for chat user IFF HUBOT_GITHUB_USER_(.*) configured
-#   hubot show [me] ready issues
-#   hubot show [me] working issues
+#   hubot show [me] ready
+#   hubot show [me] working
 #
 # Notes:
 #   If, for example, HUBOT_GITHUB_USER_JOHN is set to GitHub user login
@@ -41,7 +41,7 @@ ASK_REGEX = ///
   (\d+|\d+\sof)?\s* # 'N of' -- 'of' is optional but ambiguous unless assignee is named
   (\S+'s|my)?\s*    # Assignee's name or 'my'
   (\S+)?\s*         # Optional label name
-  issues\s*         # 'issues'
+  (issues|ready|working)\s*  # 'issues' or other commands
   (for\s\S+)?\s*    # Optional 'for <repo>'
   (about\s.+)?      # Optional 'about <query>'
 ///i
@@ -49,11 +49,12 @@ ASK_REGEX = ///
 # Given the text sent to robot.respond (e.g. 'hubot show me...'), parse the
 # criteria used for filtering issues.
 parse_criteria = (message) ->
-  [me, limit, assignee, label, repo, query] = message.match(ASK_REGEX)[1..]
+  [me, limit, assignee, label, command, repo, query] = message.match(ASK_REGEX)[1..]
   me: me,
   limit: parseInt limit.replace(" of", "") if limit?,
   assignee: assignee.replace("'s", "") if assignee?,
   label: label,
+  command: command,
   repo: repo.replace("for ", "") if repo?,
   query: query.replace("about ", "") if query?
 
@@ -83,7 +84,12 @@ module.exports = (robot) ->
     criteria.assignee = complete_assignee msg, criteria.assignee if criteria.assignee?
 
     query_params = state: "open", sort: "created"
-    query_params.labels = criteria.label if criteria.label?
+    if criteria.command is "issues"
+      query_params.labels = criteria.label if criteria.label?
+    else if criteria.command is "ready"
+      query_params.labels = "1 - Ready"
+    else if criteria.command is "working"
+      query_params.labels = "2 - Working"
     query_params.assignee = criteria.assignee if criteria.assignee?
 
     base_url = process.env.HUBOT_GITHUB_API || 'https://api.github.com'
